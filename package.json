@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/googlemaps": "^3.30.11",
     "@types/lodash": "^4.14.113",
+    "@types/markerclustererplus": "^2.1.33",
+    "@types/numeral": "^0.0.25",
     "@types/react-router": "^4.0.29",
     "@types/react-router-dom": "^4.3.0",
     "antd": "^3.7.1",
     "lodash": "^4.17.10",
+    "numeral": "^2.0.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-google-maps": "^9.4.5",
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "2.16.0"
   },

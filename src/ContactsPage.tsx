@@ -1,8 +1,9 @@
-import { Avatar, List, Pagination } from 'antd';
+import { List, Pagination } from 'antd';
 import { chunk } from 'lodash';
 import * as React from 'react';
 import data from './data';
 import { Contact } from './models';
+import { RenderListItem } from './shared';
 
 interface State {
   contacts: Contact[][];
@@ -52,12 +53,3 @@ class Contacts extends React.Component<{}, State> {
 
 export default Contacts;
 
-const RenderListItem = ({picture, name, email}: Contact) => (
-  <List.Item>
-    <List.Item.Meta
-      avatar={<Avatar src={picture} />}
-      title={`${name.first} ${name.last}`}
-      description={email}
-    />
-  </List.Item>
-)
