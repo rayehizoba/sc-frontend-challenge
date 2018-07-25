@@ -81,8 +81,8 @@ class Search extends React.Component<{}, State> {
   }
 
   private onSearch = (searchTerm: string) => {
-    const {filterOptions, perPageCount} = this.state;
     if (!searchTerm.length) { return;}
+    const {filterOptions, perPageCount} = this.state;
     const searchResults = handleSearch(data, searchTerm, filterOptions);
     const contacts = chunk(searchResults, perPageCount) as Contact[][];
     this.setState({contacts, searchResults});
