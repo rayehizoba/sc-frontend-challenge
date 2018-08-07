@@ -5,13 +5,13 @@ export const getMeanValue = (values: number[]): number => {
 }
 
 export const getStandardDeviation = (
-  balances: number[], 
-  balancesAverageValue: number
+  list: number[], 
+  meanValue: number
 ): number => {
-  const SDprep = balances.reduce((a, b) => (
-    a + Math.pow((b - balancesAverageValue), 2)
-  ));
-  const SDresult = Math.sqrt(SDprep / balances.length);
+  const diffs = list.map(value => value - meanValue);
+  const squareDiffs = diffs.map(value => Math.pow(value, 2));
+  const avgSquareDiffs = getMeanValue(squareDiffs);
+  const SDresult = Math.sqrt(avgSquareDiffs);
 
   return SDresult;
 }
@@ -32,7 +32,7 @@ export const searchHandler = (list: any[], searchTerm: string, searchFields: str
   });
 }
 
-export const flattenObject = (obj: object) => {
+export const flattenObject = (obj: object): object => {
 	const toReturn = {};
 	
 	for (const key in obj) {

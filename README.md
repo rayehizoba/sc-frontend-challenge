@@ -7,6 +7,10 @@
 - install dependencies `$ yarn install`
 - `$ yarn start`
 
+**How to run tests**
+- `$ yarn test`
+NOTE: Ensure dependencies have been installed first
+
 **Assignment:**
 
 Design and implement a customer management system for the Fancy Broker Agency.
