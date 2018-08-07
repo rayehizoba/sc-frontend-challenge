@@ -1,5 +1,5 @@
 <center>
-     <h2>Software Engineer Challenge - Front-End</h2>
+  <h2>Software Engineer Challenge - Front-End</h2>
 </center>
 
 **How to run:**
@@ -10,6 +10,10 @@
 **How to run tests**
 - `$ yarn test`
 NOTE: Ensure dependencies have been installed first
+
+**How to build the image and fire up the container**
+- `$ docker-compose up -d --build`
+- `$ docker-compose stop` to bring down the container
 
 **Assignment:**
 
