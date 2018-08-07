@@ -5,12 +5,13 @@ import { GoogleMap, Marker, withGoogleMap, withScriptjs } from 'react-google-map
 import data from './data';
 import './HomePage.css';
 import { Contact } from './models';
+import { getMeanValue, getStandardDeviation } from './shared';
 
 const Home = () => (
   <div className="dashboard" >
     <CustomerCount count={data.length} />
     <AverageAge avgAge={getAvgAge(data)} />
-    <StandardDeviationAmount standardDev={getStandardDeviation(data)} />
+    <StandardDeviationAmount contacts={data} />
     <MapComponent
       markers={data}
       googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAKbPeHxXhp8A9HyXQafxGepq2Yct2P5Yc"
@@ -51,28 +52,23 @@ const getAvgAge = (contactList: Contact[]): number => {
 }
 
 interface StandardDeviationAmountProps {
-  standardDev: number;
+  contacts: Contact[];
 }
 
-const StandardDeviationAmount = ({standardDev}: StandardDeviationAmountProps) => (
-  <Card className="SDCard" >
-    <p>S.D. of debt</p>
-    <h1>{standardDev}</h1>
-  </Card>
-)
+const StandardDeviationAmount = ({contacts}: StandardDeviationAmountProps) => {
+  const balances = mapContactsWithBalances(contacts);
+  const balancesMeanValue = getMeanValue(balances);
+  const standardDeviation = getStandardDeviation(balances, balancesMeanValue);
+  return (
+    <Card className="SDCard" >
+      <p>S.D. of debt</p>
+      <h1>{standardDeviation}</h1>
+    </Card>
+  );
+}
 
-const getStandardDeviation = (contactList: Contact[]): number => {
-  const debts = contactList.map(({balance}) => numeral(balance).value());
-  
-  // calculate average
-  const sum = debts.reduce((a, b) => a + b);
-  const meanVal = sum / debts.length;
-
-  // calculate standard deviation
-  const SDprep = debts.reduce((a, b) => a + Math.pow((b - meanVal), 2));
-  const SDresult = Math.sqrt(SDprep / debts.length);
-
-  return SDresult;
+const mapContactsWithBalances = (contactList: Contact[]): number[] => {
+  return contactList.map(({balance}) => numeral(balance).value());
 }
 
 interface MapComponentProps {

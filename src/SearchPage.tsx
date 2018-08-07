@@ -3,7 +3,17 @@ import { chunk } from 'lodash';
 import * as React from 'react';
 import data from './data';
 import { Contact } from './models';
-import { RenderListItem } from './shared';
+import { RenderListItem, searchHandler } from './shared';
+
+const searchFilterOptions = [
+  { label: "First name", value: "name.first" },
+  { label: "Last name", value: "name.last" },
+  { label: "Address", value: "address" },
+  { label: "Phone", value: "phone" },
+  { label: "Email", value: "email" },
+  { label: "Company", value: "company" },
+];
+const defaultFilterOptions = searchFilterOptions.map(({value}) => value);
 
 interface State {
   contacts: Contact[][];
@@ -13,20 +23,14 @@ interface State {
   searchResults: Contact[];
 }
 
-const searchFilterOptions = ['Name', 'Address', 'Phone', 'Email', 'Company'];
-
 class Search extends React.Component<{}, State> {
-  constructor(props: any) {
-    super(props);
-    const perPageCount = 10;
-    this.state = {
-      perPageCount, 
-      contacts: [], 
-      currentPage: 0, 
-      filterOptions: searchFilterOptions,
-      searchResults: []
-    };
-  }
+  public state = {
+    perPageCount: 10, 
+    contacts: [], 
+    currentPage: 0, 
+    filterOptions: defaultFilterOptions,
+    searchResults: []
+  };
   
   public render() {
     const {contacts, currentPage, perPageCount, searchResults} = this.state;
@@ -36,15 +40,15 @@ class Search extends React.Component<{}, State> {
         <Card>
           <Input.Search
             placeholder="Input search text"
-            style={{ width: '50%' }}
+            style={{ width: '40%' }}
             enterButton={true}
             onSearch={this.onSearch}
           />
           <Checkbox.Group
             options={searchFilterOptions}
-            defaultValue={searchFilterOptions}
+            defaultValue={defaultFilterOptions}
             onChange={this.onSearchFiltersChange}
-            style={{ width: '50%', paddingLeft: 30 }}
+            style={{ width: '60%', paddingLeft: 30 }}
           />
         </Card>
         <List
@@ -75,42 +79,16 @@ class Search extends React.Component<{}, State> {
   )
 
   private onSearchFiltersChange = (checkedValues: string[]) => {
-    this.setState({
-      filterOptions: checkedValues
-    });
+    this.setState({filterOptions: checkedValues});
   }
 
   private onSearch = (searchTerm: string) => {
     if (!searchTerm.length) { return;}
     const {filterOptions, perPageCount} = this.state;
-    const searchResults = handleSearch(data, searchTerm, filterOptions);
+    const searchResults = searchHandler(data, searchTerm, filterOptions);
     const contacts = chunk(searchResults, perPageCount) as Contact[][];
     this.setState({contacts, searchResults});
   }
 }
 
 export default Search;
-
-const handleSearch = (contacts: Contact[], searchTerm: string, searchFields: string[]): Contact[] => {
-  const nameFields = ['first', 'last'];
-  return contacts.filter(contact => {
-    let found = false;
-    for (let field of searchFields) {
-      field = field.toLowerCase();
-      if (field === 'name') {
-        for (const nField of nameFields) {
-          found = foundInObj(contact[field], nField, searchTerm);
-          if (found) { break;}
-        }
-      } else {
-        found = foundInObj(contact, field, searchTerm);
-      }
-      if (found) { break;}
-    }
-    return found;
-  });
-}
-
-const foundInObj = (obj: object, field: string, searchTerm: string): boolean => {
-  return obj[field].toLowerCase().includes(searchTerm.toLowerCase());
-}
